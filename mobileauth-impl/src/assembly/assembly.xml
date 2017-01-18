@@ -3,7 +3,6 @@
 	<id>bin</id>
 	<formats>
 		<format>zip</format>
-		<format>dir</format>
 	</formats>
 	<fileSets>
 		<fileSet>
@@ -24,6 +23,11 @@
 		<fileSet>
 			<directory>${project.basedir}/src/main/resources/views/</directory>
 			<outputDirectory>views</outputDirectory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+		</fileSet>
+		<fileSet>
+			<directory>${project.basedir}/src/main/resources/messages/</directory>
+			<outputDirectory>messages</outputDirectory>
 			<useDefaultExcludes>true</useDefaultExcludes>
 		</fileSet>
 		<fileSet>

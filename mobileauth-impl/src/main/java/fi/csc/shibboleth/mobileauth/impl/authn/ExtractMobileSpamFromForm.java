@@ -92,7 +92,7 @@ public class ExtractMobileSpamFromForm extends AbstractExtractionAction {
     @SuppressWarnings("unchecked")
     @Override
     protected boolean doPreExecute(@Nonnull final ProfileRequestContext profileRequestContext,
-            @Nonnull final AuthenticationContext authenticationContext) {
+                                   @Nonnull final AuthenticationContext authenticationContext) {
 
         if (!super.doPreExecute(profileRequestContext, authenticationContext)) {
             return false;
@@ -103,14 +103,14 @@ public class ExtractMobileSpamFromForm extends AbstractExtractionAction {
             ActionSupport.buildEvent(profileRequestContext, EventIds.INVALID_PROFILE_CTX);
             return false;
         }
-        
+
         return true;
     }
 
     /** {@inheritDoc} */
     @Override
     protected void doExecute(@Nonnull final ProfileRequestContext profileRequestContext,
-            @Nonnull final AuthenticationContext authenticationContext) {
+                             @Nonnull final AuthenticationContext authenticationContext) {
         log.debug("{} Entering {} - doExecute", getLogPrefix(), this.getClass());
 
         final HttpServletRequest request = getHttpServletRequest();
@@ -141,15 +141,12 @@ public class ExtractMobileSpamFromForm extends AbstractExtractionAction {
         final String spamCode = request.getParameter(spamCodeField);
         if (StringSupport.trimOrNull(spamCode) == null) {
             log.debug("{} No spamCode in the request, which is fine", getLogPrefix());
-
         } else {
-
             if (MobileAuthenticationUtils.validateSpamPreventionCode(spamCode)) {
                 log.debug("{} Added spamCode to the context [{}]", getLogPrefix(), spamCode);
                 mobCtx.setSpamCode(spamCode);
-
             } else {
-                log.info("{} SpamCode is invalid - [{}]", getLogPrefix(), spamCode);
+                log.info("{} SpamCode is invalid - contains whitespace or is too long", getLogPrefix());
                 ActionSupport.buildEvent(profileRequestContext, AuthnEventIds.INVALID_CREDENTIALS);
                 mobCtx.setErrorMessage("InvalidSpamCode");
                 return;

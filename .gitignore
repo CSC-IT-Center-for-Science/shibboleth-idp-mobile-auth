@@ -1,17 +1,23 @@
-# Eclipse
-.classpath
+*.class
+.idea/
+*.iml
 .project
+.classpath
 .settings/
-
-# Mac
-.DS_Store
-
-# Maven
-log/
+.vagrant/
 target/
-/*/target/
-/*/test-output/
+*.zip
+*.tar.gz
+id_rsa
+ansible_user*
 
-# Java
-.class
-.jar
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*

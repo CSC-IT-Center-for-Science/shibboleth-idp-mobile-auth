@@ -25,23 +25,61 @@ package fi.csc.shibboleth.mobileauth.impl.authn.utils;
 
 import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
-
-import fi.csc.shibboleth.mobileauth.impl.authn.utils.MobileAuthenticationUtils;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 public class MobileAuthenticationUtilsTest {
 
-	private String validNumber = "+358401234567";
-	private String invalidNumber = "+358123";
+	private String validNumberMinimumLength = "0502000";
+	private String invalidNumberTooShort = "050200";
+	private String validNumberMaxLength = "050123456789012";
+	private String invalidNumberTooLong = "0501234567890123";
+
+	// same length range in international format
+	private String internationalNumberMinimumLength = "+358502000";
+	private String internationalNumberTooShort = "+35850200";
+	private String internationalNumberMaximumLength = "+35850123456789012";
+	private String internationalNumberTooLong = "+358501234567890123";
 	private String originalNumber = "040123123";
 
 	@Test
-	public void validPhoneNumberTest() {
-		assertEquals(MobileAuthenticationUtils.validatePhoneNumber(validNumber), true );
+	public void validNumberShortTest() {
+		assertTrue(MobileAuthenticationUtils.validatePhoneNumber(validNumberMinimumLength));
 	}
 
 	@Test
-	public void invalidPhoneNumberTest() {
-		assertEquals(MobileAuthenticationUtils.validatePhoneNumber(invalidNumber), false);
+	public void invalidNumberTooShortTest() {
+		assertFalse(MobileAuthenticationUtils.validatePhoneNumber(invalidNumberTooShort));
+	}
+
+	@Test
+	public void validNumberLongTest() {
+		assertTrue(MobileAuthenticationUtils.validatePhoneNumber(validNumberMaxLength));
+	}
+
+	@Test
+	public void invalidNumberTooLongTest() {
+		assertFalse(MobileAuthenticationUtils.validatePhoneNumber(invalidNumberTooLong));
+	}
+
+	@Test
+	public void validInternationalFormShortNumberTest() {
+		assertTrue(MobileAuthenticationUtils.validatePhoneNumber(internationalNumberMinimumLength));
+	}
+
+	@Test
+	public void invalidInternationalFormTooShortNumberTest() {
+		assertFalse(MobileAuthenticationUtils.validatePhoneNumber(internationalNumberTooShort));
+	}
+
+	@Test
+	public void validInternationalFormLongNumberTest() {
+		assertTrue(MobileAuthenticationUtils.validatePhoneNumber(internationalNumberMaximumLength));
+	}
+
+	@Test
+	public void invalidInternationalFormTooLongNumberTest() {
+		assertFalse(MobileAuthenticationUtils.validatePhoneNumber(internationalNumberTooLong));
 	}
 
 	@Test

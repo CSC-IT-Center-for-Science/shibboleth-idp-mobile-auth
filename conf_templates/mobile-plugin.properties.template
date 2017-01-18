@@ -1,0 +1,8 @@
+# Mobile plugin properties
+#########################
+mobile.plugin.keystorepath={{ mobile_plugin_keystorepath }}
+mobile.plugin.keystorepassword={{ mobile_plugin_keystorepassword }}
+mobile.plugin.keystorekeyname={{ mobile_plugin_keystorekeyname }}
+mobile.plugin.keystorekeypassword={{ mobile_plugin_keystorekeypassword }}
+mobile.plugin.truststorepath={{ mobile_plugin_truststorepath }}
+mobile.plugin.truststorepassword={{ java_truststore_password }}

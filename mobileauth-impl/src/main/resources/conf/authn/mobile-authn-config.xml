@@ -12,6 +12,12 @@
        default-init-method="initialize"
        default-destroy-method="destroy">
 
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location">
+            <value>mobile-plugin.properties</value>
+        </property>
+    </bean>
+
     <!--
     Define entries here to map error messages returned by external modules and classify them as particular
     kinds of errors for use in your templates and as events in flows.
@@ -28,19 +34,17 @@
     <!-- Authentication properties -->
 
     <bean id="shibboleth.authn.AuthServer" class="java.lang.String" c:_0="localhost" />
-    <bean id="shibboleth.authn.AuthPort" class="java.lang.String" c:_0="8443" />
+    <bean id="shibboleth.authn.AuthPort" class="java.lang.String" c:_0="8444" />
     <bean id="shibboleth.authn.AuthPath" class="java.lang.String" c:_0="/etsi/authenticate" />
     <bean id="shibboleth.authn.StatusPath" class="java.lang.String" c:_0="/etsi/getStatus" />
-    
     <bean id="shibboleth.authn.KeystoreType" class="java.lang.String" c:_0="JKS" />
-    <bean id="shibboleth.authn.KeystorePath" class="java.lang.String" c:_0="/opt/certificates/tomcat/keystore.jks" />
-    <bean id="shibboleth.authn.KeystorePasswd" class="java.lang.String" c:_0="changeit" />
-    <bean id="shibboleth.authn.KeyPasswd" class="java.lang.String" c:_0="changeit" />
-    <bean id="shibboleth.authn.KeyAlias" class="java.lang.String" c:_0="client" />
-    <bean id="shibboleth.authn.TrustStorePath" class="java.lang.String" c:_0="/opt/certificates/tomcat/truststore.jks" />
+    <bean id="shibboleth.authn.KeystorePath" class="java.lang.String" c:_0="${mobile.plugin.keystorepath}" />
+    <bean id="shibboleth.authn.KeystorePasswd" class="java.lang.String" c:_0="${mobile.plugin.keystorepassword}" />
+    <bean id="shibboleth.authn.KeyPasswd" class="java.lang.String" c:_0="${mobile.plugin.keystorekeypassword}" />
+    <bean id="shibboleth.authn.KeyAlias" class="java.lang.String" c:_0="${mobile.plugin.keystorekeyname}" />
+    <bean id="shibboleth.authn.TrustStorePath" class="java.lang.String" c:_0="${mobile.plugin.truststorepath}" />
     <bean id="shibboleth.authn.TrustStoreType" class="java.lang.String" c:_0="JKS" />
-    <bean id="shibboleth.authn.TrustStorePassword" class="java.lang.String" c:_0="changeit" />
-    
+    <bean id="shibboleth.authn.TrustStorePassword" class="java.lang.String" c:_0="${mobile.plugin.truststorepassword}" />
     <bean id="shibboleth.authn.LangNamespace" class="java.lang.String" c:_0="urn:kapa:SAML:2.0:extensions" />
     <bean id="shibboleth.authn.Lang" class="java.lang.String" c:_0="kapa" />
 

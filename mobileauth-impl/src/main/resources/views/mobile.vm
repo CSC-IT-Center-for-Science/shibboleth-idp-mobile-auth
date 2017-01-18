@@ -3,7 +3,8 @@
 #set ($mobileContext = $authenticationContext.getSubcontext('fi.csc.shibboleth.mobileauth.api.authn.context.MobileContext'))
 #set ($errorMessage = $mobileContext.getErrorMessage())
 #set ($idpMesPrefix = "idp.login.error.")
-#set ($errMessType = $idpMesPrefix+$errorMessage.replace(" ", "").replace(".",""))
+#set ($errMessType = $idpMesPrefix+$errorMessage.replace(" ", "").replace(".","").replace(",","").replace(":",""))
+#set ($errMessPhone = $errMessType.contains("Problemlookupcertfor"))
 
 <!--[if lte IE 7]> <html lang="fi" itemtype="http://schema.org/WebPage" data-text-size="3" class="no-js text-size-3 lte_ie9 lte_ie8 lte7"> <![endif]-->
 <!--[if IE 8]> <html lang="fi" itemtype="http://schema.org/WebPage" data-text-size="3" class="no-js text-size-3 lte_ie9 lte_ie8 ie8"> <![endif]-->
@@ -85,7 +86,11 @@
                                 <label for="telephone" class="form-label">#springMessageText("idp.login.mobilenumber", "Puhelinnumero <small>(esim. 04012345678)</small>")</label>
                                 <input type="text" class="form-element form-field" id="j_mobileNumber" name="j_mobileNumber">
                                 #if ($errorMessage)
-                                  <div class="validation-message" aria-live="polite">#springMessageText("$errMessType", "Virheellinen puhelinnumero tai häirinnän estokoodi")</div>
+                                  #if (!$errMessPhone)
+                                    <div class="validation-message" aria-live="polite">#springMessageText("$errMessType", "Virheellinen puhelinnumero tai häirinnän estokoodi")</div>
+                                  #else
+                                    <div class="validation-message" aria-live="polite">#springMessageText("idp.login.error.InvalidPhoneNumber", "Virheellinen puhelinnumero tai häirinnän estokoodi")</div>
+                                  #end
                                 #end
                             </div>
                         </div>
@@ -97,14 +102,14 @@
                         </div>
                         <div class="col-xs-12">
                             <button class="form-element form-button" type="submit" name="_eventId_proceed"
-                    onClick="this.childNodes[0].nodeValue='#springMessageText("idp.login.pleasewait", "Kirjaudutaan..")'"
+                    onClick="this.childNodes[0].nodeValue='#springMessageText("idp.login.pleasewait", "Kirjaudutaan..")'; document.getElementById('cancelLink').removeAttribute('href');"
                     >#springMessageText("idp.login.login", "Lähetä")</button>
                         </div>
                     </div>
                 </form>
 
                <div class="col-xs-12 service-top"><br>
-                    <a href=$flowExecutionUrl&_eventId=AuthenticationException class="go-back">#springMessageText("idp.login.page-cancel", "Peruuta ja palaa tunnistusvälineen valintaan") </a><br>
+                    <a id="cancelLink" href="$flowExecutionUrl&_eventId=AuthenticationException" class="go-back">#springMessageText("idp.login.page-cancel", "Peruuta ja palaa tunnistusvälineen valintaan") </a><br>
                 </div>
                     <div class="row">
                         <h3>#springMessageText("idp.login.page-text2", "Hyvä tietää")</h3>
@@ -125,9 +130,9 @@
                     </div>
                     #springMessageText("idp.login.page-text4", "")
                     <ul class="link-list">
-            <li><a target="_blank" href="https://testi.apro.tunnistus.fi/info/tietoapalvelusta/">#springMessageText("idp.login.page-info", "Tietoa palvelusta")</a></li>
-            <li><a target="_blank" href="https://testi.apro.tunnistus.fi/info/tietosuojaseloste/">#springMessageText("idp.login.page-privacy", "Henkilötietolain mukainen tietosuojaseloste")</a></li>
-            <li><a target="_blank" href="https://testi.apro.tunnistus.fi/info/palaute/">#springMessageText("idp.login.page-feedback", "Ilmoita virheestä tai anna palautetta")</a></li>
+            <li><a target="_blank" href="https://tunnistaminen.suomi.fi/info/tietoapalvelusta/">#springMessageText("idp.login.page-info", "Tietoa palvelusta")</a></li>
+            <li><a target="_blank" href="https://tunnistaminen.suomi.fi/info/tietosuojaseloste/">#springMessageText("idp.login.page-privacy", "Henkilötietolain mukainen tietosuojaseloste")</a></li>
+            <li><a target="_blank" href="https://tunnistaminen.suomi.fi/info/palaute/">#springMessageText("idp.login.page-feedback", "Ilmoita virheestä tai anna palautetta")</a></li>
                     </ul>
                 </div>
             </div>

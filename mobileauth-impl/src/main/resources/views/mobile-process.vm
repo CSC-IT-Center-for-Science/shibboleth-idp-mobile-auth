@@ -25,6 +25,15 @@
         <!--[if lt IE 9]>
             <script src="#springUrl("/js/vendor/respond.js")"></script>
             <![endif]-->
+    <script type="text/javascript">
+function clickAndDisable(link) 
+{
+    link.onclick = function(event) 
+    {
+        event.preventDefault();
+    }
+}
+    </script>
 </head>
 <body id="identification-service" class="txlive">
 <header id="page-header" role="banner">
@@ -74,8 +83,8 @@
            #springMessageText("idp.login.page-text6", "")
                 <div class="loader">#springMessageText("idp.login.page-text7", "Haetaan sisältöä...")</div>
 
-               <div class="col-xs-12 service-top"><br>
-                 <a href=$flowExecutionUrl&_eventId=AuthenticationException class="go-back">#springMessageText("idp.login.page-cancel", "Peruuta ja palaa tunnistusvälineen valintaan") </a><br>
+               <div id="cancelDiv" class="col-xs-12 service-top"><br>
+                 <a id="cancelLink" href="$flowExecutionUrl&_eventId=AuthenticationException" onclick="clickAndDisable(this);" class="go-back">#springMessageText("idp.login.page-cancel", "Peruuta ja palaa tunnistusvälineen valintaan") </a><br>
                 </div>
                     <div class="row">
                        <h3>#springMessageText("idp.login.page-text2", "Hyvä tietää")</h3>
@@ -96,9 +105,9 @@
                     </div>
                     #springMessageText("idp.login.page-text4", "")
                     <ul class="link-list">
-<li><a target="_blank" href="https://testi.apro.tunnistus.fi/info/tietoapalvelusta/">#springMessageText("idp.login.page-info", "Tietoa palvelusta")</a></li>
-            <li><a target="_blank" href="https://testi.apro.tunnistus.fi/info/tietosuojaseloste/">#springMessageText("idp.login.page-privacy", "Henkilötietolain mukainen tietosuojaseloste")</a></li>
-            <li><a target="_blank" href="https://testi.apro.tunnistus.fi/info/palaute/">#springMessageText("idp.login.page-feedback", "Ilmoita virheestä tai anna palautetta")</a></li>
+<li><a target="_blank" href="https://tunnistaminen.suomi.fi/info/tietoapalvelusta/">#springMessageText("idp.login.page-info", "Tietoa palvelusta")</a></li>
+            <li><a target="_blank" href="https://tunnistaminen.suomi.fi/info/tietosuojaseloste/">#springMessageText("idp.login.page-privacy", "Henkilötietolain mukainen tietosuojaseloste")</a></li>
+            <li><a target="_blank" href="https://tunnistaminen.suomi.fi/info/palaute/">#springMessageText("idp.login.page-feedback", "Ilmoita virheestä tai anna palautetta")</a></li>
                     </ul>
                 </div>
             </div>
@@ -134,21 +143,18 @@
                     urli = data.status.link.substring(n);
                     console.log("URL: " + urli);
                     if(data.status.state !== "IN_PROCESS") location.href = urli;
-
+                    document.getElementById("cancelDiv").innerHTML = "<br/><a id=\"cancelLink\" href=\"" + urli.replace("IN_PROCESS", "AuthenticationException") + "\" onclick=\"clickAndDisable(this);\" class=\"go-back\">#springMessageText("idp.login.page-cancel", "Peruuta ja palaa tunnistusvälineen valintaan")</a><br>";
                     setTimeout(function(){
                       rec_ajax(urli);
                     }, 3000);
 
                 },
                 error: function (request, status, error) {
-                //TODO: Error handling
-                //alert(request.responseText);
                 }
             });
          }
 
         $(document).ready(rec_ajax("$link"));
-
         </script>
         #end
     </body>

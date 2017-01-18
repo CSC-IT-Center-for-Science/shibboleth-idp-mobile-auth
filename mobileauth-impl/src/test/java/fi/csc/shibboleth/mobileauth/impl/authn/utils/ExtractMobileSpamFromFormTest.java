@@ -49,12 +49,15 @@ public class ExtractMobileSpamFromFormTest extends PopulateAuthenticationContext
 
     /** The Spam code attribute. */
     private String expectedSpamCode;
-    
+
     /** The invalid Mobile number attribute. */
     private String invalidMobile;
 
-    /** The invalid Spam code attribute. */
-    private String invalidSpam;
+    /** Invalid spam code attribute with whitespace. */
+    private String invalidSpamCodeWithWhiteSpace;
+
+    /** Invalid spam code attribute that is too long. */
+    private String invalidSpamCodeTooLong;
 
     /** The Mobile number field. */
     private String mobileNumberField;
@@ -81,8 +84,9 @@ public class ExtractMobileSpamFromFormTest extends PopulateAuthenticationContext
         expectedMobile = "+35840123456";
         expectedSpamCode = "A1234";
         invalidMobile = "1231";
-        invalidSpam = "1234";
-        
+        invalidSpamCodeWithWhiteSpace = "12 34";
+        invalidSpamCodeTooLong = "0123456789012345678901234567890123";
+
     }
 
     @Test
@@ -91,9 +95,9 @@ public class ExtractMobileSpamFromFormTest extends PopulateAuthenticationContext
         final Event event = action.execute(src);
         ActionTestingSupport.assertEvent(event, EventIds.INVALID_PROFILE_CTX);
     }
-    
+
     @Test
-    public void testSuccess() throws ComponentInitializationException {        
+    public void testSuccess() throws ComponentInitializationException {
         action.setHttpServletRequest(new MockHttpServletRequest());
         ((MockHttpServletRequest) action.getHttpServletRequest()).addParameter(mobileNumberField, expectedMobile);
         ((MockHttpServletRequest) action.getHttpServletRequest()).addParameter(spamCodeField, expectedSpamCode);
@@ -105,14 +109,36 @@ public class ExtractMobileSpamFromFormTest extends PopulateAuthenticationContext
         final MobileContext mobCtx = authCtx.getSubcontext(MobileContext.class, false);
         Assert.assertEquals(mobCtx.getMobileNumber(), expectedMobile);
         Assert.assertEquals(mobCtx.getSpamCode(), expectedSpamCode);
-        
+
     }
-    
+
     @Test
     public void testFail() throws ComponentInitializationException {
         action.setHttpServletRequest(new MockHttpServletRequest());
-        ((MockHttpServletRequest) action.getHttpServletRequest()).addParameter("j_mobileNumber", invalidMobile);
-        ((MockHttpServletRequest) action.getHttpServletRequest()).addParameter("j_spamcode", invalidSpam);
+        ((MockHttpServletRequest) action.getHttpServletRequest()).addParameter(mobileNumberField, invalidMobile);
+        ((MockHttpServletRequest) action.getHttpServletRequest()).addParameter(spamCodeField, invalidSpamCodeWithWhiteSpace);
+        action.initialize();
+        prc.getSubcontext(AuthenticationContext.class, false).setAttemptedFlow(authenticationFlows.get(0));
+        final Event event = action.execute(src);
+        Assert.assertEquals(AuthnEventIds.INVALID_CREDENTIALS,event.toString());
+    }
+
+    @Test
+    public void testSpamCodeWithWhiteSpace() throws ComponentInitializationException {
+        action.setHttpServletRequest(new MockHttpServletRequest());
+        ((MockHttpServletRequest) action.getHttpServletRequest()).addParameter(mobileNumberField, expectedMobile);
+        ((MockHttpServletRequest) action.getHttpServletRequest()).addParameter(spamCodeField, invalidSpamCodeWithWhiteSpace);
+        action.initialize();
+        prc.getSubcontext(AuthenticationContext.class, false).setAttemptedFlow(authenticationFlows.get(0));
+        final Event event = action.execute(src);
+        Assert.assertEquals(AuthnEventIds.INVALID_CREDENTIALS,event.toString());
+    }
+
+    @Test
+    public void testSpamCodeTooLong() throws ComponentInitializationException {
+        action.setHttpServletRequest(new MockHttpServletRequest());
+        ((MockHttpServletRequest) action.getHttpServletRequest()).addParameter(mobileNumberField, expectedMobile);
+        ((MockHttpServletRequest) action.getHttpServletRequest()).addParameter(spamCodeField, invalidSpamCodeTooLong);
         action.initialize();
         prc.getSubcontext(AuthenticationContext.class, false).setAttemptedFlow(authenticationFlows.get(0));
         final Event event = action.execute(src);
